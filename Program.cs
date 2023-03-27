@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Diagnostics.Contracts;
+
 
 namespace modul6_1302210057
 {
@@ -14,6 +15,8 @@ public class SayaTubeVideo
 
     public SayaTubeVideo(string title)
     {
+        Debug.Assert(title.Length< 200);
+        Debug.Assert(title != null);
         Random r = new Random();
         this.id = r.Next(10000, 99999);
         this.title = title;
@@ -21,7 +24,18 @@ public class SayaTubeVideo
     }
     public void increasePlayCount(int tambahan)
     {
+        Debug.Assert(tambahan <25000000);
+        Debug.Assert(tambahan >= 0);
+        try
+        {
+
         this.playCount+= tambahan;
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e.ToString);
+        }
     }
     public void printVideoDetails()
     {
@@ -42,11 +56,14 @@ public class SayaTubeUser
     private int id;
     private List<SayaTubeVideo> uploadedVideos = new List<SayaTubeVideo>();
     public string Username;
-    public SayaTubeUser(string Userrname)
-    {
+    public SayaTubeUser(String Username)
+    {  Debug.Assert(Username != null);
+            Debug.Assert(Username.Length <= 100);
+
+
         Random r = new Random();
         this.id = r.Next(10000, 99999);
-        this.Username= Userrname;
+        this.Username= Username;
     }
     public List<SayaTubeVideo> getSayaTubeVideos()
     {
@@ -61,11 +78,16 @@ public class SayaTubeUser
         }
     }public void AddVideo(SayaTubeVideo video)
     {
+        Debug.Assert(video != null);
+        Debug.Assert(video.getPlayCount() <99999999);
+
+
         this.uploadedVideos.Add(video);
     }
     public void printAllVideoPlayCount()
     {
         Console.WriteLine("User: "+ this.Username);
+        Contract.Ensures(uploadedVideos.Count <= 8);
         foreach (var video in uploadedVideos)
         {
         Console.WriteLine("Video : "+ video.getTitle());
@@ -96,6 +118,9 @@ public class Program
             Console.WriteLine("Review Film " + film.getTitle() + " oleh " + sayaTubeUser.Username);
         }
         sayaTubeUser.printAllVideoPlayCount();
-
+        for (int i = 0; i < 777; i++)
+        {
+            sayaTubeUser.getSayaTubeVideos()[2].increasePlayCount(1000000);
+        }
     }
 }
